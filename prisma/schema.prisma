@@ -1,0 +1,152 @@
+// prisma/schema.prisma
+// ─────────────────────────────────────────────────────────
+// Schema TENKAI — PostgreSQL (Supabase)
+// Prisma 5.x — directUrl requer Prisma >= 4.10
+// ─────────────────────────────────────────────────────────
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ── Usuários do sistema (funcionários/admin) ─────────────
+model User {
+  id         Int      @id @default(autoincrement())
+  name       String
+  email      String   @unique
+  password   String   // bcrypt hash
+  role       Role     @default(OPERATOR)
+  active     Boolean  @default(true)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("users")
+}
+
+enum Role {
+  ADMIN
+  OPERATOR
+}
+
+// ── Configurações da empresa ─────────────────────────────
+model Settings {
+  id               Int     @id @default(1)
+  company_name     String  @default("TENKAI")
+  company_phone    String  @default("")
+  company_address  String  @default("")
+  company_logo_url String  @default("")
+  pix_key          String  @default("")
+  // Motoboy 1
+  motoboy1_name    String  @default("")
+  motoboy1_phone   String  @default("")
+  motoboy1_active  Boolean @default(true)
+  // Motoboy 2
+  motoboy2_name    String  @default("")
+  motoboy2_phone   String  @default("")
+  motoboy2_active  Boolean @default(false)
+  // Mensagem de saudação para o cliente
+  greeting_message String  @default("Olá! 👋 Seja bem-vindo ao {company}!\nAcesse nosso cardápio e faça seu pedido:\n{link}")
+
+  @@map("settings")
+}
+
+// ── Bairros com taxa de entrega ──────────────────────────
+model Neighborhood {
+  id     Int     @id @default(autoincrement())
+  name   String
+  fee    Decimal @default(0)
+  active Boolean @default(true)
+
+  orders Order[]
+
+  @@map("neighborhoods")
+}
+
+// ── Itens do cardápio ────────────────────────────────────
+model MenuItem {
+  id          Int      @id @default(autoincrement())
+  name        String
+  category    String
+  price       Decimal
+  description String   @default("")
+  portion     String   @default("")
+  emoji       String   @default("🍱")
+  image_url   String?  // URL do Supabase Storage
+  available   Boolean  @default(true)
+  sort_order  Int      @default(0)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  order_items OrderItem[]
+
+  @@map("menu_items")
+}
+
+// ── Pedidos ──────────────────────────────────────────────
+model Order {
+  id               Int           @id @default(autoincrement())
+  client_name      String
+  client_phone     String        @default("")
+  address          String        @default("")
+  neighborhood_id  Int?
+  delivery_fee     Decimal       @default(0)
+  delivery_type    DeliveryType  @default(DELIVERY)
+  payment          PaymentMethod @default(PIX)
+  obs              String        @default("")
+  status           OrderStatus   @default(PENDING)
+  total            Decimal
+  source           OrderSource   @default(INTERNAL)  // interno ou cliente (link)
+  created_at       DateTime      @default(now())
+  updated_at       DateTime      @updatedAt
+
+  neighborhood Neighborhood? @relation(fields: [neighborhood_id], references: [id])
+  items        OrderItem[]
+
+  @@map("orders")
+}
+
+enum DeliveryType {
+  DELIVERY
+  PICKUP
+}
+
+enum PaymentMethod {
+  PIX
+  CREDIT
+  DEBIT
+  CASH
+}
+
+enum OrderStatus {
+  PENDING
+  MAKING
+  READY
+  DELIVERED
+  CANCELLED
+}
+
+enum OrderSource {
+  INTERNAL   // criado pelo operador no painel
+  CUSTOMER   // criado pelo cliente via link público
+}
+
+// ── Itens do pedido ──────────────────────────────────────
+model OrderItem {
+  id          Int      @id @default(autoincrement())
+  order_id    Int
+  menu_item_id Int?
+  item_name   String
+  item_emoji  String   @default("🍱")
+  item_price  Decimal
+  quantity    Int
+
+  order     Order     @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  menu_item MenuItem? @relation(fields: [menu_item_id], references: [id], onDelete: SetNull)
+
+  @@map("order_items")
+}

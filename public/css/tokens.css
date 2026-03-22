@@ -1,0 +1,70 @@
+/* ═══════════════════════════════════════════════
+   tokens.css — Design tokens TENKAI v4
+   Importado por todos os CSS do sistema
+   ═══════════════════════════════════════════════ */
+
+:root {
+  /* Cores base */
+  --bg:      #08080a;
+  --bg2:     #101013;
+  --bg3:     #17171c;
+  --bg4:     #1f1f26;
+  --bg5:     #26262e;
+
+  /* Bordas */
+  --border:  rgba(255,255,255,.06);
+  --border2: rgba(255,255,255,.11);
+  --border3: rgba(255,255,255,.18);
+
+  /* Texto */
+  --text:    #eeeae3;
+  --text2:   #8a8680;
+  --text3:   #48463f;
+
+  /* Marca */
+  --red:     #c8321a;
+  --red2:    #ff4d2e;
+  --red3:    #ff7a5c;
+  --red-bg:  rgba(200,50,26,.12);
+
+  /* Dourado */
+  --gold:    #c49a28;
+  --gold2:   #f0be55;
+  --gold-bg: rgba(196,154,40,.12);
+
+  /* Semânticas */
+  --green:   #1fa055;
+  --green2:  #27d46e;
+  --green-bg:rgba(31,160,85,.12);
+  --teal:    #0fa89a;
+  --teal2:   #1fcfc0;
+  --teal-bg: rgba(15,168,154,.12);
+  --blue:    #2563eb;
+  --blue2:   #60a5fa;
+  --blue-bg: rgba(37,99,235,.12);
+
+  /* Raios */
+  --r:   8px;
+  --r2: 14px;
+  --r3: 20px;
+
+  /* Tipografia */
+  --font:    'Plus Jakarta Sans', sans-serif;
+  --font-jp: 'Zen Kaku Gothic New', sans-serif;
+
+  /* Layout */
+  --sidebar: 220px;
+}
+
+/* Reset */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font); background: var(--bg); color: var(--text);
+       min-height: 100vh; }
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
+
+/* Utilitários comuns */
+.hidden { display: none !important; }
+.flex   { display: flex; }
+.grid   { display: grid; }

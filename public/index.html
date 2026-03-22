@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TENKAI — Delivery Manager</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body style="display:flex">
+
+<!-- ══════════════ SIDEBAR ══════════════ -->
+<aside class="sidebar">
+  <div class="logo-box">
+    <div class="logo-inner">
+      <img id="sidebarLogo" class="logo-img" src="" alt="">
+      <div class="logo-text">
+        <h1 id="sidebarName">TENKAI</h1>
+        <p>Delivery Manager</p>
+      </div>
+    </div>
+  </div>
+  <nav>
+    <div class="nav-section">
+      <div class="nav-section-label">Operação</div>
+      <div class="nav-item active" data-page="pedidos" onclick="goTo('pedidos')">
+        <svg class="ni" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+        <span>Pedidos</span>
+        <span class="nav-badge" id="openBadge" style="display:none">0</span>
+      </div>
+      <div class="nav-item" data-page="historico" onclick="goTo('historico')">
+        <svg class="ni" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span>Histórico</span>
+      </div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-label">Cardápio</div>
+      <div class="nav-item" data-page="cardapio" onclick="goTo('cardapio')">
+        <svg class="ni" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        <span>Cardápio</span>
+      </div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-label">Análise</div>
+      <div class="nav-item" data-page="dashboard" onclick="goTo('dashboard')">
+        <svg class="ni" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        <span>Dashboard</span>
+      </div>
+      <div class="nav-item" data-page="financeiro" onclick="goTo('financeiro')">
+        <svg class="ni" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span>Financeiro</span>
+      </div>
+      <div class="nav-item" data-page="relatorios" onclick="goTo('relatorios')">
+        <svg class="ni" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        <span>Relatórios</span>
+      </div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-label">Sistema</div>
+      <div class="nav-item" data-page="configuracoes" onclick="goTo('configuracoes')">
+        <svg class="ni" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span>Configurações</span>
+      </div>
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="sidebar-user">
+      <div class="user-avatar" id="sidebarUserInitials">AD</div>
+      <span style="font-size:12px;color:var(--text2)" id="sidebarUserName">Admin</span>
+    </div>
+    <button onclick="doLogout()" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:11px;padding:2px 6px;border-radius:4px" title="Sair">Sair</button>
+  </div>
+</aside>
+
+<!-- ══════════════ MAIN ══════════════ -->
+<main class="main">
+
+<!-- PEDIDOS -->
+<section id="page-pedidos" class="page active">
+  <div class="ph"><div class="ph-left"><h2>Novo Pedido</h2><p>Monte o pedido ou envie o link para o cliente</p></div></div>
+  <div class="card card-sm" style="margin-bottom:20px">
+    <div class="fg-row cols3">
+      <div class="fg"><label>Cliente *</label><input id="pClientName" placeholder="Nome do cliente"></div>
+      <div class="fg"><label>WhatsApp</label><input id="pClientPhone" placeholder="79999999999" type="tel"></div>
+      <div class="fg"><label>Pagamento</label>
+        <select id="pPayment">
+          <option value="PIX">PIX</option><option value="CREDIT">Cartão Crédito</option>
+          <option value="DEBIT">Cartão Débito</option><option value="CASH">Dinheiro</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg-row cols3">
+      <div class="fg"><label>Tipo de Entrega</label>
+        <select id="pDeliveryType" onchange="onDeliveryTypeChange()">
+          <option value="DELIVERY">🛵 Delivery</option><option value="PICKUP">🏪 Retirada</option>
+        </select>
+      </div>
+      <div class="fg" id="nbhField"><label>Bairro</label>
+        <select id="pNeighborhood" onchange="updateDeliveryFee()"><option value="">Selecione o bairro</option></select>
+      </div>
+      <div class="fg" id="feeField"><label>Taxa de Entrega (R$)</label><input id="pFee" type="number" step="0.01" value="0" min="0"></div>
+    </div>
+    <div class="fg" id="addrField"><label>Endereço Completo</label><input id="pAddress" placeholder="Rua, número, complemento, referência"></div>
+    <div class="fg" style="margin-bottom:0"><label>Observações</label><textarea id="pObs" placeholder="Sem gengibre, molho extra..."></textarea></div>
+  </div>
+  <div class="order-layout">
+    <div>
+      <div class="cat-tabs" id="orderCatTabs"></div>
+      <div class="omenu" id="orderMenu"></div>
+    </div>
+    <div>
+      <div class="cart-panel">
+        <h3>🛒 Carrinho</h3>
+        <div id="cartItems"></div>
+        <div id="cartFeeRow" class="cart-fee-row" style="display:none"><span>Taxa de entrega</span><span id="cartFeeVal"></span></div>
+        <div class="cart-total-row"><span style="font-size:14px;font-weight:700">Total</span><span id="cartTotal">R$ 0,00</span></div>
+        <div class="div" style="margin:12px 0"></div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="btn btn-primary" onclick="finalizarPedido()" style="justify-content:center">Finalizar Pedido</button>
+          <button class="btn btn-gold" onclick="abrirWA()" style="justify-content:center">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            WA Cliente
+          </button>
+          <button class="btn btn-teal" onclick="enviarMotoboy()" style="justify-content:center">🏍️ Motoboy</button>
+          <button class="btn btn-ghost" onclick="copiarSaudacao()" style="justify-content:center">📋 Copiar Saudação</button>
+          <button class="btn btn-ghost" onclick="limparCarrinho()" style="justify-content:center">Limpar</button>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <div style="font-size:12px;color:var(--text2);font-weight:700;margin-bottom:12px;text-transform:uppercase;letter-spacing:.6px">Em Aberto</div>
+        <div id="openOrdersList" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HISTÓRICO -->
+<section id="page-historico" class="page">
+  <div class="ph">
+    <div class="ph-left"><h2>Histórico</h2><p>Todos os pedidos registrados</p></div>
+    <div class="ph-right">
+      <input type="date" id="histFrom" style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:7px 11px;color:var(--text);font-family:var(--font);font-size:13px;outline:none">
+      <input type="date" id="histTo"   style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:7px 11px;color:var(--text);font-family:var(--font);font-size:13px;outline:none">
+      <button class="btn btn-ghost" onclick="loadHistory()">Filtrar</button>
+    </div>
+  </div>
+  <div class="search-bar">
+    <input id="histSearch" placeholder="Buscar por cliente ou telefone..." oninput="loadHistory()">
+    <select id="histStatus" onchange="loadHistory()" style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:9px 13px;color:var(--text);font-family:var(--font);font-size:13px;outline:none">
+      <option value="all">Todos</option><option value="PENDING">Pendente</option>
+      <option value="MAKING">Preparando</option><option value="READY">Pronto</option>
+      <option value="DELIVERED">Entregue</option><option value="CANCELLED">Cancelado</option>
+    </select>
+  </div>
+  <div id="histList"></div>
+</section>
+
+<!-- CARDÁPIO -->
+<section id="page-cardapio" class="page">
+  <div class="ph">
+    <div class="ph-left"><h2>Cardápio</h2><p>Gerencie os itens do menu</p></div>
+    <div class="ph-right"><button class="btn btn-primary" onclick="openItemModal()">+ Novo Item</button></div>
+  </div>
+  <div class="cat-tabs" id="menuCatTabs"></div>
+  <div class="menu-grid" id="menuGrid"></div>
+</section>
+
+<!-- DASHBOARD -->
+<section id="page-dashboard" class="page">
+  <div class="ph">
+    <div class="ph-left"><h2>Dashboard</h2><p>Performance do delivery</p></div>
+    <div class="ph-right">
+      <select id="dashPeriod" onchange="loadDashboard()" style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:8px 13px;color:var(--text);font-family:var(--font);font-size:13px;outline:none">
+        <option value="7">7 dias</option><option value="30">30 dias</option><option value="90">90 dias</option><option value="all">Tudo</option>
+      </select>
+    </div>
+  </div>
+  <div class="g4" id="dashStats" style="margin-bottom:26px"></div>
+  <div class="g2" style="margin-bottom:22px">
+    <div class="card"><h3 style="font-size:14px;margin-bottom:18px">🏆 Mais Vendidos</h3><div class="bar-chart" id="topItems"></div></div>
+    <div class="card"><h3 style="font-size:14px;margin-bottom:18px">📂 Por Categoria</h3><div class="bar-chart" id="catChart"></div></div>
+  </div>
+  <div class="card"><h3 style="font-size:14px;margin-bottom:18px">💳 Formas de Pagamento</h3>
+    <div id="payChart" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px"></div>
+  </div>
+</section>
+
+<!-- FINANCEIRO -->
+<section id="page-financeiro" class="page">
+  <div class="ph">
+    <div class="ph-left"><h2>Financeiro</h2><p>Pagamentos dos pedidos entregues</p></div>
+    <div class="ph-right">
+      <select id="finFilter" onchange="loadFinanceiro()" style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:8px 13px;color:var(--text);font-family:var(--font);font-size:13px;outline:none">
+        <option value="all">Todos</option><option value="PIX">PIX</option>
+        <option value="CREDIT">Crédito</option><option value="DEBIT">Débito</option><option value="CASH">Dinheiro</option>
+      </select>
+      <button class="btn btn-ghost" onclick="exportCSV()">📥 Exportar CSV</button>
+    </div>
+  </div>
+  <div class="g4" id="finStats" style="margin-bottom:26px"></div>
+  <div class="tw"><table><thead><tr><th>#</th><th>Cliente</th><th>Data/Hora</th><th>Itens</th><th>Entrega</th><th>Pagamento</th><th>Total</th><th></th></tr></thead><tbody id="finTable"></tbody></table></div>
+</section>
+
+<!-- RELATÓRIOS -->
+<section id="page-relatorios" class="page">
+  <div class="ph"><div class="ph-left"><h2>Relatórios</h2><p>Pedidos finalizados e entregas realizadas</p></div></div>
+  <div class="card card-sm" style="margin-bottom:24px">
+    <div class="fg-row cols3" style="align-items:flex-end">
+      <div class="fg" style="margin-bottom:0"><label>De</label><input type="date" id="repFrom"></div>
+      <div class="fg" style="margin-bottom:0"><label>Até</label><input type="date" id="repTo"></div>
+      <div>
+        <label style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;font-weight:600;display:block;margin-bottom:7px">Tipo</label>
+        <div style="display:flex;gap:16px;align-items:center">
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="radio" name="repType" value="delivered" checked style="accent-color:var(--red)"> Pedidos finalizados</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="radio" name="repType" value="deliveries" style="accent-color:var(--red)"> Entregas feitas</label>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:14px"><button class="btn btn-primary" onclick="loadRelatorios()">Gerar Relatório</button></div>
+  </div>
+  <div class="g4" id="repStats" style="margin-bottom:24px"></div>
+  <div class="tw"><table><thead><tr><th>#</th><th>Cliente</th><th>Data/Hora</th><th>Entrega</th><th>Pagamento</th><th>Total</th></tr></thead><tbody id="repTable"></tbody></table></div>
+</section>
+
+<!-- CONFIGURAÇÕES -->
+<section id="page-configuracoes" class="page">
+  <div class="ph"><div class="ph-left"><h2>Configurações</h2><p>Empresa, motoboys, link do cliente e taxas</p></div></div>
+
+  <!-- Link público -->
+  <div class="card card-sm" style="margin-bottom:24px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div><div style="font-size:14px;font-weight:600">🌐 Link do Cardápio para o Cliente</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:3px">Compartilhe este link para o cliente fazer o pedido pelo celular</div></div>
+    </div>
+    <div class="link-box">
+      <span id="publicLink">Carregando...</span>
+      <button class="btn btn-teal btn-sm" onclick="copyPublicLink()">Copiar</button>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div>
+      <div class="settings-section">
+        <h3>Empresa</h3>
+        <div class="logo-upload-wrap">
+          <img id="logoPreview" class="logo-preview" src="" alt="Logo">
+          <div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:6px">Logo da empresa</div>
+            <label class="btn btn-ghost btn-sm" style="cursor:pointer">Trocar imagem<input type="file" id="logoInput" accept="image/*" style="display:none" onchange="previewLogo(this)"></label>
+          </div>
+        </div>
+        <div class="fg"><label>Nome</label><input id="cfgName" oninput="updateGreetingPreview()"></div>
+        <div class="fg"><label>Telefone</label><input id="cfgPhone"></div>
+        <div class="fg"><label>Endereço</label><input id="cfgAddress"></div>
+        <div class="fg"><label>Chave PIX</label><input id="cfgPix"></div>
+      </div>
+
+      <div class="settings-section">
+        <h3>Mensagem de Saudação WhatsApp</h3>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:10px">Variáveis: <code style="background:var(--bg3);padding:2px 6px;border-radius:4px;color:var(--teal2)">{company}</code> e <code style="background:var(--bg3);padding:2px 6px;border-radius:4px;color:var(--teal2)">{link}</code></div>
+        <div class="fg"><label>Mensagem</label><textarea id="cfgGreeting" rows="4" oninput="updateGreetingPreview()" placeholder="Olá! Bem-vindo ao {company}! Faça seu pedido: {link}"></textarea></div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">Prévia:</div>
+        <div class="greeting-preview" id="greetingPreview"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="settings-section">
+        <h3>Motoboys</h3>
+        <div style="background:var(--bg3);border-radius:var(--r);padding:16px;margin-bottom:14px;border:1px solid var(--border)">
+          <div style="font-size:13px;font-weight:700;margin-bottom:10px">Motoboy 1</div>
+          <div class="fg-row cols2" style="margin-bottom:10px">
+            <div class="fg" style="margin-bottom:0"><label>Nome</label><input id="cfgMotoboy1Name" placeholder="Nome do motoboy"></div>
+            <div class="fg" style="margin-bottom:0"><label>WhatsApp</label><input id="cfgMotoboy1Phone" placeholder="79999999999" type="tel"></div>
+          </div>
+          <div class="toggle-row"><input type="checkbox" id="cfgMotoboy1Active" checked><label for="cfgMotoboy1Active">Ativo — recebe pedidos</label></div>
+        </div>
+        <div style="background:var(--bg3);border-radius:var(--r);padding:16px;border:1px solid var(--border)">
+          <div style="font-size:13px;font-weight:700;margin-bottom:10px">Motoboy 2</div>
+          <div class="fg-row cols2" style="margin-bottom:10px">
+            <div class="fg" style="margin-bottom:0"><label>Nome</label><input id="cfgMotoboy2Name" placeholder="Nome do motoboy"></div>
+            <div class="fg" style="margin-bottom:0"><label>WhatsApp</label><input id="cfgMotoboy2Phone" placeholder="79999999999" type="tel"></div>
+          </div>
+          <div class="toggle-row"><input type="checkbox" id="cfgMotoboy2Active"><label for="cfgMotoboy2Active">Ativo — recebe pedidos</label></div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3>Bairros & Taxas de Entrega</h3>
+        <div id="nbhList" style="margin-bottom:16px"></div>
+        <div class="fg-row cols2" style="align-items:flex-end">
+          <div class="fg" style="margin-bottom:0"><label>Bairro</label><input id="nbhName" placeholder="Nome do bairro"></div>
+          <div class="fg" style="margin-bottom:0"><label>Taxa (R$)</label><input id="nbhFee" type="number" step="0.50" min="0" placeholder="0.00"></div>
+        </div>
+        <button class="btn btn-ghost" style="margin-top:10px;width:100%;justify-content:center" onclick="addNeighborhood()">+ Adicionar Bairro</button>
+      </div>
+
+      <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="saveSettings()">Salvar Configurações</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ═══ MODAIS ═══ -->
+<!-- Item Cardápio -->
+<div class="moverlay" id="modalItem">
+  <div class="modal">
+    <h3 id="modalItemTitle">Novo Item</h3>
+    <div class="fg-row cols2">
+      <div class="fg"><label>Nome *</label><input id="iName" placeholder="Ex: Temaki Salmão"></div>
+      <div class="fg"><label>Emoji</label><input id="iEmoji" placeholder="🍣" maxlength="2"></div>
+    </div>
+    <div class="fg-row cols2">
+      <div class="fg"><label>Categoria</label>
+        <select id="iCategory"><option>Temaki</option><option>Combinado</option><option>Sashimi</option><option>Uramaki</option><option>Nigiri</option><option>Hot Roll</option><option>Entradas</option><option>Bebidas</option><option>Sobremesas</option></select>
+      </div>
+      <div class="fg"><label>Preço (R$) *</label><input id="iPrice" type="number" step="0.01" min="0"></div>
+    </div>
+    <div class="fg"><label>Foto</label>
+      <div class="img-upload-box" onclick="document.getElementById('iImage').click()">
+        <img id="iImagePreview" src="" alt="" style="display:none">
+        <svg width="28" height="28" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:var(--text3)"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        <div class="uptext">Clique para adicionar foto<br><span style="font-size:10px">JPG, PNG, WebP até 5MB</span></div>
+        <input type="file" id="iImage" accept="image/*" style="display:none" onchange="previewItemImage(this)">
+      </div>
+    </div>
+    <div class="fg"><label>Descrição</label><textarea id="iDesc"></textarea></div>
+    <div class="fg-row cols2">
+      <div class="fg"><label>Porção</label><input id="iPortion" placeholder="Ex: 8 peças"></div>
+      <div class="fg" style="display:flex;align-items:center;gap:10px;padding-top:24px">
+        <input type="checkbox" id="iAvailable" checked><label for="iAvailable" style="font-size:13.5px;cursor:pointer">Disponível</label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalItem')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveItem()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- WA Preview -->
+<div class="moverlay" id="modalWA">
+  <div class="modal">
+    <h3>📱 Mensagem WhatsApp</h3>
+    <p style="font-size:12.5px;color:var(--text3);margin-bottom:12px">Prévia:</p>
+    <div class="wa-msg" id="waMsgPreview"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalWA')">Fechar</button>
+      <button class="btn btn-gold" id="waSendBtn">Abrir WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<!-- Comanda -->
+<div class="moverlay" id="modalPrint">
+  <div class="modal"><h3>🖨️ Comanda</h3><div id="comandaContent"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalPrint')">Fechar</button>
+      <button class="btn btn-primary" onclick="window.print()">Imprimir</button>
+    </div>
+  </div>
+</div>
+
+<!-- Detalhe Pedido -->
+<div class="moverlay" id="modalOrderDetail">
+  <div class="modal lg"><h3>Detalhes do Pedido</h3><div id="orderDetailContent"></div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modalOrderDetail')">Fechar</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div id="printArea" style="display:none"></div>
+<script type="module" src="/js/app.js"></script>
+</body>
+</html>

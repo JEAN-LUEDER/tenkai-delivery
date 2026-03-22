@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TENKAI — Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@900&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#08080a; --bg2:#101013; --bg3:#17171c;
+      --border:rgba(255,255,255,.07); --border2:rgba(255,255,255,.13);
+      --text:#eeeae3; --text2:#8a8680; --text3:#48463f;
+      --red:#c8321a; --red2:#ff4d2e;
+      --font:'Plus Jakarta Sans',sans-serif;
+      --font-jp:'Zen Kaku Gothic New',sans-serif;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:var(--font);background:var(--bg);color:var(--text);
+         min-height:100vh;display:flex;align-items:center;justify-content:center;
+         padding:20px;position:relative;overflow:hidden}
+
+    /* Background pattern */
+    body::before{content:'';position:fixed;inset:0;
+      background:radial-gradient(ellipse at 20% 50%, rgba(200,50,26,.08) 0%, transparent 60%),
+                 radial-gradient(ellipse at 80% 20%, rgba(200,50,26,.05) 0%, transparent 50%);
+      pointer-events:none}
+
+    /* Floating kanji decoration */
+    .kanji-bg{position:fixed;font-family:var(--font-jp);font-size:240px;font-weight:900;
+              color:rgba(200,50,26,.03);right:-40px;top:50%;transform:translateY(-50%);
+              user-select:none;pointer-events:none;line-height:1}
+
+    .login-card{
+      background:var(--bg2);border:1px solid var(--border2);border-radius:20px;
+      padding:44px 40px;width:100%;max-width:400px;position:relative;z-index:1;
+      box-shadow:0 32px 80px rgba(0,0,0,.5);
+    }
+
+    .logo{text-align:center;margin-bottom:36px}
+    .logo h1{font-family:var(--font-jp);font-size:36px;font-weight:900;letter-spacing:3px}
+    .logo h1 span{color:var(--red2)}
+    .logo p{font-size:12px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-top:6px}
+
+    .form-group{margin-bottom:20px}
+    .form-group label{display:block;font-size:11px;color:var(--text3);
+                      text-transform:uppercase;letter-spacing:.8px;font-weight:600;margin-bottom:8px}
+    .form-group input{
+      width:100%;background:var(--bg3);border:1px solid var(--border);
+      border-radius:10px;padding:13px 16px;color:var(--text);font-size:14px;
+      font-family:var(--font);outline:none;transition:border-color .15s;
+    }
+    .form-group input:focus{border-color:var(--red)}
+    .form-group input::placeholder{color:var(--text3)}
+
+    .btn-login{
+      width:100%;background:var(--red);color:#fff;border:none;border-radius:10px;
+      padding:14px;font-size:15px;font-weight:700;cursor:pointer;
+      font-family:var(--font);transition:all .15s;margin-top:8px;
+      display:flex;align-items:center;justify-content:center;gap:10px;
+    }
+    .btn-login:hover{background:var(--red2);transform:translateY(-1px)}
+    .btn-login:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+    .error-box{
+      background:rgba(200,50,26,.12);border:1px solid rgba(200,50,26,.25);
+      border-radius:8px;padding:12px 14px;font-size:13px;color:#ff7a5c;
+      margin-bottom:16px;display:none;align-items:center;gap:8px;
+    }
+    .error-box.show{display:flex}
+
+    .footer-text{text-align:center;font-size:12px;color:var(--text3);margin-top:28px}
+
+    .spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);
+             border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body>
+  <div class="kanji-bg">天海</div>
+
+  <div class="login-card">
+    <div class="logo">
+      <h1>TEN<span>KAI</span></h1>
+      <p>Delivery Manager</p>
+    </div>
+
+    <div class="error-box" id="errorBox">
+      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+      </svg>
+      <span id="errorMsg">Usuário ou senha inválidos</span>
+    </div>
+
+    <form id="loginForm" onsubmit="doLogin(event)">
+      <div class="form-group">
+        <label>E-mail</label>
+        <input type="email" id="email" placeholder="seu@email.com" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
+      </div>
+      <button class="btn-login" type="submit" id="loginBtn">
+        <span id="loginBtnText">Entrar</span>
+      </button>
+    </form>
+
+    <p class="footer-text">TENKAI v4.0 · Sistema de Delivery</p>
+  </div>
+
+  <script>
+    // Se já estiver logado, redireciona
+    if (localStorage.getItem('tenkai_token')) {
+      window.location.href = '/';
+    }
+
+    async function doLogin(e) {
+      e.preventDefault();
+      const btn     = document.getElementById('loginBtn');
+      const btnText = document.getElementById('loginBtnText');
+      const errBox  = document.getElementById('errorBox');
+      const errMsg  = document.getElementById('errorMsg');
+
+      btn.disabled = true;
+      btnText.innerHTML = '<div class="spinner"></div>';
+      errBox.classList.remove('show');
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email:    document.getElementById('email').value.trim(),
+            password: document.getElementById('password').value
+          })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          errMsg.textContent = data.error ?? 'Erro ao fazer login';
+          errBox.classList.add('show');
+          return;
+        }
+
+        // Salva token e dados do usuário
+        localStorage.setItem('tenkai_token', data.token);
+        localStorage.setItem('tenkai_user',  JSON.stringify(data.user));
+
+        // Redireciona para o painel
+        window.location.href = '/';
+
+      } catch {
+        errMsg.textContent = 'Servidor indisponível. Verifique se o TENKAI está rodando.';
+        errBox.classList.add('show');
+      } finally {
+        btn.disabled = false;
+        btnText.textContent = 'Entrar';
+      }
+    }
+  </script>
+</body>
+</html>
