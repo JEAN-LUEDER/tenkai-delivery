@@ -6,3 +6,4 @@ uploads/
 logs/
 .DS_Store
 Thumbs.db
+SETUP_SUPABASE.md
